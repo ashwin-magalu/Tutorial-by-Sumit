@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Iterators</title>
+</head>
+<body>
+    <script>
+        const teamsByTechnology = {
+            Sumit: ["Amit", "Sachin"],
+            Balaji: ["Karthik", "Rajesh", "Priyanka"],
+            Jay: ["Naveen", "Ajay", "Praveen"]
+        }
+
+        teamsByTechnology[Symbol.iterator] = function(){
+            let teamLeadIndex = 0
+            let teamMemberIndex = 0
+            let teamLeadKeys = Object.keys(this)
+
+            return {
+                next: () => {
+                    if(teamLeadIndex > teamLeadKeys.length - 1){
+                        return {
+                            value: undefined,
+                            done: true,
+                        }
+                    }
+
+                    let teamMembers = this[teamLeadKeys[teamLeadIndex]]
+                    let currentTeamMember = teamMembers[teamMemberIndex]
+                    const isLastMember = teamMemberIndex >= teamMembers.length - 1
+                    teamMemberIndex++
+
+                    if(isLastMember){
+                        teamLeadIndex++
+                        teamMemberIndex = 0
+                    }
+                    
+                    return {
+                        done: false,
+                        value: currentTeamMember
+                    }
+                }
+            }
+        }
+
+        for (const name of teamsByTechnology) {
+            console.log("Name", name)
+        }
+    </script>
+</body>
+</html>
